@@ -1,0 +1,199 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>mobilenetv1 v2笔记 | 没有谁可以陪你走到最后</title><meta name="author" content="rdyan"><meta name="copyright" content="rdyan"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="MobileNet v1网络详解传统卷积神经网络，内存需求大、运算量大导致无法在移动设备以及嵌入式设备上运行；所以提出了MobileNet应用到实际生活中2017年提出的轻量级CNN网络MobileNet专注于移动端或嵌入式设备，在准确率小幅降低的前提下减少了模型参数和运算量 MobileNet v1网络中主要有两个两点： Depthwise Convolution(减少参数和运算量) 增加超参数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mobilenetv1 v2笔记">
+<meta property="og:url" content="https://rdyan0053.github.io/2023/02/01/mobilenetv1v2%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="没有谁可以陪你走到最后">
+<meta property="og:description" content="MobileNet v1网络详解传统卷积神经网络，内存需求大、运算量大导致无法在移动设备以及嵌入式设备上运行；所以提出了MobileNet应用到实际生活中2017年提出的轻量级CNN网络MobileNet专注于移动端或嵌入式设备，在准确率小幅降低的前提下减少了模型参数和运算量 MobileNet v1网络中主要有两个两点： Depthwise Convolution(减少参数和运算量) 增加超参数">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg2.png">
+<meta property="article:published_time" content="2023-02-01T14:51:38.000Z">
+<meta property="article:modified_time" content="2023-02-02T02:38:29.351Z">
+<meta property="article:author" content="rdyan">
+<meta property="article:tag" content="深度学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fastly.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg2.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://rdyan0053.github.io/2023/02/01/mobilenetv1v2%E7%AC%94%E8%AE%B0/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'mobilenetv1 v2笔记',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-02-02 10:38:29'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = url => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      link.onload = () => resolve()
+      link.onerror = () => reject()
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./images/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">7</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情连接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://fastly.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg2.png')"><nav id="nav"><span id="blog-info"><a href="/" title="没有谁可以陪你走到最后"><span class="site-name">没有谁可以陪你走到最后</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情连接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">mobilenetv1 v2笔记</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-02-01T14:51:38.000Z" title="发表于 2023-02-01 22:51:38">2023-02-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-02-02T02:38:29.351Z" title="更新于 2023-02-02 10:38:29">2023-02-02</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="mobilenetv1 v2笔记"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="MobileNet-v1网络详解"><a href="#MobileNet-v1网络详解" class="headerlink" title="MobileNet v1网络详解"></a>MobileNet v1网络详解</h1><p>传统卷积神经网络，内存需求大、运算量大导致无法在移动设备以及嵌入式设备上运行；所以提出了MobileNet应用到实际生活中<br><img src="https://cdn.jsdelivr.net/gh/rdyan0053/blogpicbed/img/20230201223844.png" alt="img.png"><br>2017年提出的轻量级CNN网络MobileNet专注于移动端或嵌入式设备，在准确率小幅降低的前提下减少了模型参数和运算量</p>
+<h3 id="MobileNet-v1网络中主要有两个两点："><a href="#MobileNet-v1网络中主要有两个两点：" class="headerlink" title="MobileNet v1网络中主要有两个两点："></a>MobileNet v1网络中主要有两个两点：</h3><ol>
+<li>Depthwise Convolution(减少参数和运算量)</li>
+<li>增加超参数α(控制卷积层、核数量)、β(控制输入图像尺寸)，这两个超参数是人为设定的<br><img src="https://cdn.jsdelivr.net/gh/rdyan0053/blogpicbed/img/20230201223854.png" alt="img.png"></li>
+</ol>
+<h3 id="DW卷积详解"><a href="#DW卷积详解" class="headerlink" title="DW卷积详解"></a>DW卷积详解</h3><p>我的理解：</p>
+<ol>
+<li>传统卷积如下图左上角所示，输入3通道的图像，4个卷积核，每个卷积核都是3通道，每个通道图像和每个通道的卷积核都做卷积操作，最后得到的特征图通道和卷积核个数一样(有特征融合的感觉)；</li>
+<li>DW卷积如下图右下角所示，输入3通道图像，3个卷积核，每个通道和各自的卷积核进行卷积<br><img src="https://cdn.jsdelivr.net/gh/rdyan0053/blogpicbed/img/20230201223903.png" alt="img.png"></li>
+</ol>
+<h3 id="Depthwise-Separable-Conv详解"><a href="#Depthwise-Separable-Conv详解" class="headerlink" title="Depthwise Separable Conv详解"></a>Depthwise Separable Conv详解</h3><p>Depthwise Separable卷积由两部分组成：</p>
+<ul>
+<li>DW卷积(Depthwise Conv)， 如下图左上角所示，不做赘述</li>
+<li>PW卷积(Pointwise Conv)，如下图右下角所示，其实就是在传统卷积的基础上，将卷积核的大小设置为1×1<br><img src="https://cdn.jsdelivr.net/gh/rdyan0053/blogpicbed/img/20230201223908.png" alt="img.png"></li>
+</ul>
+<h3 id="对比普通卷积和Depthwise-Separable卷积的计算量"><a href="#对比普通卷积和Depthwise-Separable卷积的计算量" class="headerlink" title="对比普通卷积和Depthwise Separable卷积的计算量"></a>对比普通卷积和Depthwise Separable卷积的计算量</h3><p><img src="https://cdn.jsdelivr.net/gh/rdyan0053/blogpicbed/img/20230201223914.png" alt="img.png"></p>
+<h3 id="MobileNet网络架构及超参数α、β"><a href="#MobileNet网络架构及超参数α、β" class="headerlink" title="MobileNet网络架构及超参数α、β"></a>MobileNet网络架构及超参数α、β</h3><p>table1是MobileNet网络架构；</p>
+<p>table8是Mobile Net和当时其他主流模型的对比(包括在ImageNet上的准确率，模型计算量Multiply-Add以及模型参数Parameters)；</p>
+<p>table6和table7对应的是MobileNet的两个超参数α(Width Multiplier)、β(Resolution Multiplier)：</p>
+<ol>
+<li>α代表的是卷积核个数的倍率因子，控制卷积核个数。比如table6第一行当α取1.0时，准确率为70.6%</li>
+<li>β代表的是分辨率的倍率因子，输入不同尺寸的图像会有不同的准确率。比如table7第一行输入图像为224×224，准确率为70.6%<br><img src="https://cdn.jsdelivr.net/gh/rdyan0053/blogpicbed/img/20230201223918.png" alt="img.png"></li>
+</ol>
+<h3 id="MobileNet-v1网络存在的问题"><a href="#MobileNet-v1网络存在的问题" class="headerlink" title="MobileNet v1网络存在的问题"></a>MobileNet v1网络存在的问题</h3><p>depthwise部分的卷积核容易废掉，即卷积核参数大部分为0</p>
+<h1 id="MobileNet-v2网络详解"><a href="#MobileNet-v2网络详解" class="headerlink" title="MobileNet v2网络详解"></a>MobileNet v2网络详解</h1><p>2018年提出的MobileNet v2比v1版本更好。网络主要两个两点：</p>
+<ul>
+<li>Inverted Residual(倒残差结构)</li>
+<li>Linear Bottlenecks</li>
+</ul>
+<h3 id="Inverted-Residual-倒残差-结构详解"><a href="#Inverted-Residual-倒残差-结构详解" class="headerlink" title="Inverted Residual(倒残差)结构详解"></a>Inverted Residual(倒残差)结构详解</h3><p>残差结构就是两头大，中间小。先用1×1卷积降维，然后使用3×3卷积，再使用1×1卷积升维；(使用Relu激活函数)</p>
+<p>倒残差结构就是两头小，中间大。先用1×1卷积升维，再使用3×3DW卷积，最后使用1×1降维；(使用Relu6激活函数)<br><img src="https://cdn.jsdelivr.net/gh/rdyan0053/blogpicbed/img/20230201223924.png" alt="img.png"></p>
+<h3 id="Linear-Bottlenecks详解"><a href="#Linear-Bottlenecks详解" class="headerlink" title="Linear Bottlenecks详解"></a>Linear Bottlenecks详解</h3><p>针对倒残差结构中最后1×1卷积层，使用了线性激活函数，而不是relu激活函数。因为relu激活函数对于低纬度特征信息会造成大量损失。Figure1给出了example，Input经过random matrix T、RuLU、T的逆矩阵，在低纬度的情况下还原的很差。<br><img src="https://cdn.jsdelivr.net/gh/rdyan0053/blogpicbed/img/20230201223928.png" alt="img.png"><br>而倒残差结构是“两头小，中间大”，所以在输出的时候就是高维到低维度的情况，所以不建议使用ReLU激活函数，这里使用了线性激活函数来替代。</p>
+<h3 id="何时有shortcut"><a href="#何时有shortcut" class="headerlink" title="何时有shortcut"></a>何时有shortcut</h3><p>当stride&#x3D;1时就会有shortcut连接，我觉得论文是默认了输入特征矩阵和输出特征矩阵shape相同，不然也没办法相加<br><img src="https://cdn.jsdelivr.net/gh/rdyan0053/blogpicbed/img/20230201223935.png" alt="img.png"></p>
+<h3 id="具体网络架构"><a href="#具体网络架构" class="headerlink" title="具体网络架构"></a>具体网络架构</h3><p>根据下图表格，可以搭建出网络。需要注意的是：</p>
+<ol>
+<li>s代表的是步距，有的bottleneck需要重复两次，两次中只有第一次s是为2的，这个根据Input的特征图大小也能判断出来</li>
+<li>t代表是扩展因子。这个在上图中的表格也可以看到</li>
+<li>下图表格中最后一行k代表的就是分类类别个数，比如使用Imagenet数据集，对应就是该数据集的类别个数<br><img src="https://cdn.jsdelivr.net/gh/rdyan0053/blogpicbed/img/20230201223950.png" alt="img.png"></li>
+</ol>
+<h3 id="MobileNetV2在视觉任务的效果"><a href="#MobileNetV2在视觉任务的效果" class="headerlink" title="MobileNetV2在视觉任务的效果"></a>MobileNetV2在视觉任务的效果</h3><p>MobileNetV2在classification任务上，当超参数α&#x3D;1.4时，Top1准确率为74.7；</p>
+<p>MobileNetV2在object detection任务上，结合SSDLite之后mAP可以达到22.1 作者：梦到死锁的银行家 <a target="_blank" rel="noopener" href="https://www.bilibili.com/read/cv21489922?spm_id_from=333.999.0.0">https://www.bilibili.com/read/cv21489922?spm_id_from=333.999.0.0</a> 出处：bilibili</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://rdyan0053.github.io">rdyan</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://rdyan0053.github.io/2023/02/01/mobilenetv1v2%E7%AC%94%E8%AE%B0/">https://rdyan0053.github.io/2023/02/01/mobilenetv1v2%E7%AC%94%E8%AE%B0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://rdyan0053.github.io" target="_blank">没有谁可以陪你走到最后</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a></div><div class="post_share"><div class="social-share" data-image="https://fastly.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg2.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/02/01/vit%E7%AC%94%E8%AE%B0/" title="vision transformer笔记"><img class="cover" src="https://fastly.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg2.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">vision transformer笔记</div></div></a></div><div class="next-post pull-right"><a href="/2023/02/01/resnet%E8%AF%A6%E8%A7%A3/" title="ResNet详解、BN以及迁移学习"><img class="cover" src="https://fastly.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg3.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">ResNet详解、BN以及迁移学习</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/02/01/vit%E7%AC%94%E8%AE%B0/" title="vision transformer笔记"><img class="cover" src="https://fastly.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg2.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-02-01</div><div class="title">vision transformer笔记</div></div></a></div><div><a href="/2023/02/02/%E5%8D%B7%E7%A7%AF%E5%8F%82%E6%95%B0%E8%AE%A1%E7%AE%97%E4%BB%A5%E5%8F%8A%E8%AE%A1%E7%AE%97%E9%87%8F%E5%85%AC%E5%BC%8F/" title="卷积参数计算以及计算量公式"><img class="cover" src="https://fastly.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg2.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-02-02</div><div class="title">卷积参数计算以及计算量公式</div></div></a></div><div><a href="/2023/02/01/resnet%E8%AF%A6%E8%A7%A3/" title="ResNet详解、BN以及迁移学习"><img class="cover" src="https://fastly.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg3.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-02-01</div><div class="title">ResNet详解、BN以及迁移学习</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/./images/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">rdyan</div><div class="author-info__description">this is a description</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">7</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/rdyan0053" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xxxxxx@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://github.com/" target="_blank" title="test icon"><i class="fa-thin fa-magnifying-glass"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#MobileNet-v1%E7%BD%91%E7%BB%9C%E8%AF%A6%E8%A7%A3"><span class="toc-number">1.</span> <span class="toc-text">MobileNet v1网络详解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MobileNet-v1%E7%BD%91%E7%BB%9C%E4%B8%AD%E4%B8%BB%E8%A6%81%E6%9C%89%E4%B8%A4%E4%B8%AA%E4%B8%A4%E7%82%B9%EF%BC%9A"><span class="toc-number">1.0.1.</span> <span class="toc-text">MobileNet v1网络中主要有两个两点：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DW%E5%8D%B7%E7%A7%AF%E8%AF%A6%E8%A7%A3"><span class="toc-number">1.0.2.</span> <span class="toc-text">DW卷积详解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Depthwise-Separable-Conv%E8%AF%A6%E8%A7%A3"><span class="toc-number">1.0.3.</span> <span class="toc-text">Depthwise Separable Conv详解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E6%AF%94%E6%99%AE%E9%80%9A%E5%8D%B7%E7%A7%AF%E5%92%8CDepthwise-Separable%E5%8D%B7%E7%A7%AF%E7%9A%84%E8%AE%A1%E7%AE%97%E9%87%8F"><span class="toc-number">1.0.4.</span> <span class="toc-text">对比普通卷积和Depthwise Separable卷积的计算量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MobileNet%E7%BD%91%E7%BB%9C%E6%9E%B6%E6%9E%84%E5%8F%8A%E8%B6%85%E5%8F%82%E6%95%B0%CE%B1%E3%80%81%CE%B2"><span class="toc-number">1.0.5.</span> <span class="toc-text">MobileNet网络架构及超参数α、β</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MobileNet-v1%E7%BD%91%E7%BB%9C%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">1.0.6.</span> <span class="toc-text">MobileNet v1网络存在的问题</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#MobileNet-v2%E7%BD%91%E7%BB%9C%E8%AF%A6%E8%A7%A3"><span class="toc-number">2.</span> <span class="toc-text">MobileNet v2网络详解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Inverted-Residual-%E5%80%92%E6%AE%8B%E5%B7%AE-%E7%BB%93%E6%9E%84%E8%AF%A6%E8%A7%A3"><span class="toc-number">2.0.1.</span> <span class="toc-text">Inverted Residual(倒残差)结构详解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linear-Bottlenecks%E8%AF%A6%E8%A7%A3"><span class="toc-number">2.0.2.</span> <span class="toc-text">Linear Bottlenecks详解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%95%E6%97%B6%E6%9C%89shortcut"><span class="toc-number">2.0.3.</span> <span class="toc-text">何时有shortcut</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B7%E4%BD%93%E7%BD%91%E7%BB%9C%E6%9E%B6%E6%9E%84"><span class="toc-number">2.0.4.</span> <span class="toc-text">具体网络架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MobileNetV2%E5%9C%A8%E8%A7%86%E8%A7%89%E4%BB%BB%E5%8A%A1%E7%9A%84%E6%95%88%E6%9E%9C"><span class="toc-number">2.0.5.</span> <span class="toc-text">MobileNetV2在视觉任务的效果</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/02/02/%E5%8D%B7%E7%A7%AF%E5%8F%82%E6%95%B0%E8%AE%A1%E7%AE%97%E4%BB%A5%E5%8F%8A%E8%AE%A1%E7%AE%97%E9%87%8F%E5%85%AC%E5%BC%8F/" title="卷积参数计算以及计算量公式"><img src="https://fastly.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="卷积参数计算以及计算量公式"/></a><div class="content"><a class="title" href="/2023/02/02/%E5%8D%B7%E7%A7%AF%E5%8F%82%E6%95%B0%E8%AE%A1%E7%AE%97%E4%BB%A5%E5%8F%8A%E8%AE%A1%E7%AE%97%E9%87%8F%E5%85%AC%E5%BC%8F/" title="卷积参数计算以及计算量公式">卷积参数计算以及计算量公式</a><time datetime="2023-02-02T02:38:56.000Z" title="发表于 2023-02-02 10:38:56">2023-02-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/02/01/vit%E7%AC%94%E8%AE%B0/" title="vision transformer笔记"><img src="https://fastly.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="vision transformer笔记"/></a><div class="content"><a class="title" href="/2023/02/01/vit%E7%AC%94%E8%AE%B0/" title="vision transformer笔记">vision transformer笔记</a><time datetime="2023-02-01T14:51:38.000Z" title="发表于 2023-02-01 22:51:38">2023-02-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/02/01/mobilenetv1v2%E7%AC%94%E8%AE%B0/" title="mobilenetv1 v2笔记"><img src="https://fastly.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="mobilenetv1 v2笔记"/></a><div class="content"><a class="title" href="/2023/02/01/mobilenetv1v2%E7%AC%94%E8%AE%B0/" title="mobilenetv1 v2笔记">mobilenetv1 v2笔记</a><time datetime="2023-02-01T14:51:38.000Z" title="发表于 2023-02-01 22:51:38">2023-02-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/02/01/resnet%E8%AF%A6%E8%A7%A3/" title="ResNet详解、BN以及迁移学习"><img src="https://fastly.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg3.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ResNet详解、BN以及迁移学习"/></a><div class="content"><a class="title" href="/2023/02/01/resnet%E8%AF%A6%E8%A7%A3/" title="ResNet详解、BN以及迁移学习">ResNet详解、BN以及迁移学习</a><time datetime="2023-02-01T14:50:36.000Z" title="发表于 2023-02-01 22:50:36">2023-02-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/02/01/%E4%BB%A3%E7%A0%81%E5%9D%97%E6%BC%94%E7%A4%BA/%E6%BC%94%E7%A4%BA/" title="代码块演示"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="代码块演示"/></a><div class="content"><a class="title" href="/2023/02/01/%E4%BB%A3%E7%A0%81%E5%9D%97%E6%BC%94%E7%A4%BA/%E6%BC%94%E7%A4%BA/" title="代码块演示">代码块演示</a><time datetime="2023-02-01T07:00:07.000Z" title="发表于 2023-02-01 15:00:07">2023-02-01</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By rdyan</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
