@@ -1,0 +1,404 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>使用hexo搭建博客的一些tips | 天天向上的东の博客</title><meta name="author" content="rdyan"><meta name="copyright" content="rdyan"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="使用模板文件新建md文档，自动产生Front-matter 问题 使用hexo搭建博客的时候，每次新建md文件的时候，都需要在文件头部添加一些字段信息Front-matter，比如title、date、categories、tags等等。这些信息都是固定的，每次都要手动添加，很麻烦。所以，我就想能不能把这些信息写到一个模板文件中，然后每次新建md文件的时候，自动产生这些信息。于是，我就找到了hex">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用hexo搭建博客的一些tips">
+<meta property="og:url" content="https://rdyan0053.github.io/2023/02/22/hexoblogs/shi-yong-hexo-da-jian-bo-ke-de-yi-xie-tips/index.html">
+<meta property="og:site_name" content="天天向上的东の博客">
+<meta property="og:description" content="使用模板文件新建md文档，自动产生Front-matter 问题 使用hexo搭建博客的时候，每次新建md文件的时候，都需要在文件头部添加一些字段信息Front-matter，比如title、date、categories、tags等等。这些信息都是固定的，每次都要手动添加，很麻烦。所以，我就想能不能把这些信息写到一个模板文件中，然后每次新建md文件的时候，自动产生这些信息。于是，我就找到了hex">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/rdyan0053/blogpicbed/img/20230227132649.png">
+<meta property="article:published_time" content="2023-02-22T03:57:15.000Z">
+<meta property="article:modified_time" content="2023-02-27T05:35:40.767Z">
+<meta property="article:author" content="rdyan">
+<meta property="article:tag" content="博客">
+<meta property="article:tag" content="hexo">
+<meta property="article:tag" content="butterfly">
+<meta property="article:tag" content="插件">
+<meta property="article:tag" content="github pages">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/rdyan0053/blogpicbed/img/20230227132649.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://rdyan0053.github.io/2023/02/22/hexoblogs/shi-yong-hexo-da-jian-bo-ke-de-yi-xie-tips/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: true,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '使用hexo搭建博客的一些tips',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-02-27 13:35:40'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = url => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      link.onload = () => resolve()
+      link.onerror = () => reject()
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./images/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">30</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">41</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li><li><a class="site-page child" href="/books/"><i class="fa-fw fas fa-book"></i><span> 书籍</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情连接</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/index.html"><i class="fa-fw fas fa-heart"></i><span> 说说</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/rdyan0053/blogpicbed/img/bg/bg2.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="天天向上的东の博客"><span class="site-name">天天向上的东の博客</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li><li><a class="site-page child" href="/books/"><i class="fa-fw fas fa-book"></i><span> 书籍</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情连接</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/index.html"><i class="fa-fw fas fa-heart"></i><span> 说说</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">使用hexo搭建博客的一些tips</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-02-22T03:57:15.000Z" title="发表于 2023-02-22 11:57:15">2023-02-22</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-02-27T05:35:40.767Z" title="更新于 2023-02-27 13:35:40">2023-02-27</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%BC%80%E5%8F%91/">开发</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="使用hexo搭建博客的一些tips"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h3 id="使用模板文件新建md文档，自动产生Front-matter">使用模板文件新建md文档，自动产生Front-matter</h3>
+<h4 id="问题">问题</h4>
+<p>使用hexo搭建博客的时候，每次新建md文件的时候，都需要在文件头部添加一些<strong>字段信息Front-matter</strong>，比如title、date、categories、tags等等。这些信息都是固定的，每次都要手动添加，很麻烦。所以，我就想能不能把这些信息写到一个模板文件中，然后每次新建md文件的时候，自动产生这些信息。于是，我就找到了hexo的模板文件的位置，然后就可以在这个位置新建一个模板文件，然后就可以在新建md文件的时候，自动产生这些信息</p>
+<h4 id="解决办法">解决办法</h4>
+<p>在hexo的根目录下，找到scaffolds文件夹，然后在这个文件夹下找到<code>post.md</code>文件，然后在这个文件中写入以下内容：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: &#123;&#123; title &#125;&#125;</span><br><span class="line">date: &#123;&#123; date &#125;&#125;</span><br><span class="line">categories:</span><br><span class="line">tags:</span><br><span class="line">keywords:</span><br><span class="line">description:</span><br><span class="line">cover:</span><br><span class="line"><span class="section">top<span class="emphasis">_img: https://xxx/bg.jpg</span></span></span><br><span class="line"><span class="emphasis"><span class="section">---</span></span></span><br></pre></td></tr></table></figure>
+<p>之后每次新建md文件的时候，就会自动产生这些信息了</p>
+<h3 id="新建md文档只能使用命令行">新建md文档只能使用命令行</h3>
+<h4 id="问题-2">问题</h4>
+<p>在使用hexo搭建博客的时候，我发现，新建md文件只能使用命令行，每次都要使用<code>hexo new '文档名称'</code>命令才会产生；如果是自己在<code>_posts</code>文件夹下右键新建md文档，就不会产生Front-matter</p>
+<h4 id="解决办法-2">解决办法</h4>
+<ul>
+<li>不知道有什么好的解决办法，只能使用命令行新建md文件了</li>
+<li>还有个问题，就是新建md文件的时候，只会在<code>_posts</code>文件夹下新建md文件，不会在<code>_posts\指定文件夹</code>文件夹下新建md文件，这个问题还没有解决（关于这个，看到的解决方案是：<a target="_blank" rel="noopener" href="https://blog.csdn.net/maosidiaoxian/article/details/85220394">如何在Hexo中对文章md文件分类</a>，除此之外，还有的说不使用hexo，转而使用book,hugo以及docsify）</li>
+<li>切换到指定文件夹再使用<code>hexo n</code>没用，不</li>
+</ul>
+<h4 id="参考教程">参考教程</h4>
+<ol>
+<li><a href="">暂无</a></li>
+</ol>
+<h3 id="使用组合命令，一次性运行多个命令">使用组合命令，一次性运行多个命令</h3>
+<h4 id="问题-3">问题</h4>
+<p>每次想要本地使用<code>hexo s</code>命令查看博客效果，都要先运行<code>hexo clean</code>命令以及<code>hexo g</code>命令，然后再运行<code>hexo s</code>命令，这样很麻烦</p>
+<h4 id="解决办法-3">解决办法</h4>
+<h5 id="使用组合命令，并且配置到npm-script中">使用组合命令，并且配置到npm script中</h5>
+<p>在命令行中，可以使用<code>&amp;&amp;</code>来组合命令，比如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo clean &amp;&amp; hexo g &amp;&amp; hexo s</span><br></pre></td></tr></table></figure>
+<p>这样就可以一次性运行这三个命令了，然后在npm中配置该组合命令，比如：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;scripts&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;start&quot;</span><span class="punctuation">:</span> <span class="string">&quot;hexo clean &amp;&amp; hexo g &amp;&amp; hexo s&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>这样就可以在命令行中直接使用<code>npm start</code>命令来运行这三个命令</p>
+<h3 id="无法指向github上的issue地址">无法指向github上的issue地址</h3>
+<h4 id="问题-4">问题</h4>
+<p>在使用hexo搭建博客的时候，我发现，无法指向github上的issue地址。在简介和公告上都添加了a标签，但是点击之后没有跳转到对应的github上的issue地址</p>
+<h4 id="解决办法-4">解决办法</h4>
+<p>暂时没有好的解决办法</p>
+<h3 id="使用数学公式的心得">使用数学公式的心得</h3>
+<h4 id="问题-5">问题</h4>
+<p>在使用hexo搭建博客的时候，我发现，使用数学公式的时候，有两种方式，一种是使用MathJax，一种是使用katex。两种方式都可以使用，但是官网推荐使用katex写数学公式</p>
+<h4 id="解决办法-5">解决办法</h4>
+<p>首先安装推荐的hexo-renderer-markdown-it插件<br>
+<img src="https://cdn.jsdelivr.net/gh/rdyan0053/blogpicbed/img/20230222214304.png" alt="使用katex来写博客里的数学公式"><br>
+因为 KaTeX 更快更轻量，因此没有 MathJax 的功能多（比如右键菜单）。为那些使用 MathJax 的用户，主题也内置了 katex 的 复制 功能</p>
+<p>这里使用<strong>表格以</strong>及<strong>katex</strong>显示数学公式</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">运算符</th>
+<th style="text-align:center">说明</th>
+<th style="text-align:center">举例</th>
+<th style="text-align:center">举例代码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">+</td>
+<td style="text-align:center">加</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>+</mo><mi>y</mi></mrow><annotation encoding="application/x-tex">x+y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center"><code>$x+y$</code></td>
+</tr>
+<tr>
+<td style="text-align:center">-</td>
+<td style="text-align:center">减</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>−</mo><mi>y</mi></mrow><annotation encoding="application/x-tex">x-y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center"><code>$x-y$</code></td>
+</tr>
+<tr>
+<td style="text-align:center">*</td>
+<td style="text-align:center">乘</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>∗</mo><mi>y</mi></mrow><annotation encoding="application/x-tex">x*y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4653em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center"><code>$x*y$</code></td>
+</tr>
+<tr>
+<td style="text-align:center">/</td>
+<td style="text-align:center">除</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mi mathvariant="normal">/</mi><mi>y</mi></mrow><annotation encoding="application/x-tex">x/y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">x</span><span class="mord">/</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center"><code>$x/y$</code></td>
+</tr>
+<tr>
+<td style="text-align:center">^</td>
+<td style="text-align:center">幂</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>x</mi><mi>y</mi></msup></mrow><annotation encoding="application/x-tex">x^y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6644em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">y</span></span></span></span></span></span></span></span></span></span></span></td>
+<td style="text-align:center"><code>$x^y$</code></td>
+</tr>
+<tr>
+<td style="text-align:center">sqrt</td>
+<td style="text-align:center">开方</td>
+<td style="text-align:center">$ \sqrt{x} $</td>
+<td style="text-align:center"><code>\$sqrt&#123;x&#125;$</code></td>
+</tr>
+<tr>
+<td style="text-align:center">frac</td>
+<td style="text-align:center">分数</td>
+<td style="text-align:center">$ \frac{x}{y} $</td>
+<td style="text-align:center"><code>$\frac&#123;x&#125;&#123;y&#125;$</code></td>
+</tr>
+<tr>
+<td style="text-align:center">^</td>
+<td style="text-align:center">上标</td>
+<td style="text-align:center">$ x^y $</td>
+<td style="text-align:center"><code>$x^y$</code></td>
+</tr>
+<tr>
+<td style="text-align:center">_</td>
+<td style="text-align:center">下标</td>
+<td style="text-align:center">$ x_y $</td>
+<td style="text-align:center"><code>$x_y$</code></td>
+</tr>
+<tr>
+<td style="text-align:center">\sqrt</td>
+<td style="text-align:center">开二次方</td>
+<td style="text-align:center">$ \sqrt x $</td>
+<td style="text-align:center"><code>$ \sqrt x $</code></td>
+</tr>
+<tr>
+<td style="text-align:center">\sqrt</td>
+<td style="text-align:center">开方</td>
+<td style="text-align:center">$ \sqrt[x]{y^4+3y-1} $</td>
+<td style="text-align:center"><code>$ \sqrt[x]&#123;y^4+3y-1&#125; $</code></td>
+</tr>
+<tr>
+<td style="text-align:center">\pm</td>
+<td style="text-align:center">加减</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>±</mo><mi>y</mi></mrow><annotation encoding="application/x-tex">x \pm y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">±</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center"><code>$x \pm y$</code></td>
+</tr>
+<tr>
+<td style="text-align:center">sum</td>
+<td style="text-align:center">求和</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mi>u</mi><msubsup><mi>m</mi><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></msubsup><msub><mi>x</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">sum_{i=1}^{n}x_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9231em;vertical-align:-0.2587em;"></span><span class="mord mathnormal">s</span><span class="mord mathnormal">u</span><span class="mord"><span class="mord mathnormal">m</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-2.4413em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2587em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></td>
+<td style="text-align:center"><code>$sum_&#123;i=1&#125;^&#123;n&#125;x_i$</code></td>
+</tr>
+<tr>
+<td style="text-align:center">prod</td>
+<td style="text-align:center">求积</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>r</mi><mi>o</mi><msubsup><mi>d</mi><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></msubsup><msub><mi>x</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">prod_{i=1}^{n}x_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9531em;vertical-align:-0.2587em;"></span><span class="mord mathnormal">p</span><span class="mord mathnormal">ro</span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-2.4413em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2587em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></td>
+<td style="text-align:center"><code>$prod_&#123;i=1&#125;^&#123;n&#125;x_i$</code></td>
+</tr>
+<tr>
+<td style="text-align:center">int</td>
+<td style="text-align:center">积分</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mi>n</mi><msubsup><mi>t</mi><mi>a</mi><mi>b</mi></msubsup><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mi>d</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">int_{a}^{b}f(x)dx</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0991em;vertical-align:-0.25em;"></span><span class="mord mathnormal">in</span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-2.453em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">a</span></span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">b</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mord mathnormal">d</span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center"><code>$int_&#123;a&#125;^&#123;b&#125;f(x)dx$</code></td>
+</tr>
+<tr>
+<td style="text-align:center">lim</td>
+<td style="text-align:center">极限</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi><mi>i</mi><msub><mi>m</mi><mrow><mi>x</mi><mo>→</mo><mi mathvariant="normal">∞</mi></mrow></msub><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">lim_{x \to \infty}f(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">i</span><span class="mord"><span class="mord mathnormal">m</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">x</span><span class="mrel mtight">→</span><span class="mord mtight">∞</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span></span></span></span></td>
+<td style="text-align:center"><code>$lim_&#123;x \to \infty&#125;f(x)$</code></td>
+</tr>
+<tr>
+<td style="text-align:center">log</td>
+<td style="text-align:center">对数</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi><mi>o</mi><msub><mi>g</mi><mi>a</mi></msub><mi>x</mi></mrow><annotation encoding="application/x-tex">log_{a}x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">o</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">a</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center"><code>$log_&#123;a&#125;x$</code></td>
+</tr>
+<tr>
+<td style="text-align:center">sin</td>
+<td style="text-align:center">正弦</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mi>i</mi><mi>n</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">sin x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">s</span><span class="mord mathnormal">in</span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center"><code>$sin x$</code></td>
+</tr>
+<tr>
+<td style="text-align:center">cos</td>
+<td style="text-align:center">余弦</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mi>o</mi><mi>s</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">cos x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">cos</span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center"><code>$cos x$</code></td>
+</tr>
+<tr>
+<td style="text-align:center">tan</td>
+<td style="text-align:center">正切</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mi>a</mi><mi>n</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">tan x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span><span class="mord mathnormal">an</span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center"><code>$tan x$</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="参考资料（建议先看第四个）">参考资料（建议先看第四个）</h4>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://katex.org/docs/supported.html">katex使用教程</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/CTeX-org/lshort-zh-cn">一份不太简短的LaTeX介绍</a></li>
+<li><a target="_blank" rel="noopener" href="https://latex.codecogs.com/eqneditor/editor.php">LaTeX 公式编辑器</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1nE411n7W8?t=324.2">8分钟学会！使用markdown编辑 以及 Latex （Katex）数学公式 在markdown中的使用 手把手实战教学，小白必入！！</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44879900/article/details/104561781">同4 Markdown里latex数学公式（Katex）</a></li>
+</ol>
+<h3 id="使用数学公式出现的bug">使用数学公式出现的bug</h3>
+<h4 id="问题-6">问题</h4>
+<p>写公式的时候，浏览器重复写了一遍<br>
+<img src="https://cdn.jsdelivr.net/gh/rdyan0053/blogpicbed/img/20230223172612.png" alt="公式重复渲染的问题"></p>
+<h4 id="解决方法">解决方法</h4>
+<p>直接看这个博客<a target="_blank" rel="noopener" href="https://foggyworld.life/posts/c07995a7/">Hexo+Butterfly+KaTeX踩坑记录</a></p>
+<h4 id="参考教程-2">参考教程</h4>
+<p>转hugo转Docsify的参考教程：</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/67266483">Docsify快速搭建个人博客</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.gohugo.org/">Hugo中文文档</a></li>
+</ol>
+<h3 id="中文链接转拼音">中文链接转拼音</h3>
+<h4 id="问题-7">问题</h4>
+<p>如果你的文章名称是中文的，那么 Hexo 默认生成的永久链接也会有中文，这样不利于 SEO，所以我们需要将中文转换为拼音</p>
+<h4 id="解决方法-2">解决方法</h4>
+<p>这里推荐一个插件<code>hexo-permalink-pinyin</code>，它可以将中文转换为拼音，安装方法如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i hexo-permalink-pinyin --save</span><br></pre></td></tr></table></figure>
+<p>然后在 Hexo 根目录下的 _config.yml 文件中，新增以下的配置项：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">permalink_pinyin:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">separator:</span> <span class="string">&#x27;-&#x27;</span> <span class="comment"># default: &#x27;-&#x27;</span></span><br></pre></td></tr></table></figure>
+<h4 id="参考教程-3">参考教程</h4>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844904144021487624">Hexo+github搭建博客(超级详细版，精细入微)</a></li>
+</ol>
+<h3 id="local-search（可选的）">local search（可选的）</h3>
+<h4 id="问题-8">问题</h4>
+<p>如果你的博客文章很多，那么你可能需要一个搜索功能</p>
+<h4 id="解决方法-3">解决方法</h4>
+<p>这里推荐一个插件<code>hexo-generator-searchdb</code>，它可以生成一个搜索数据库，安装方法如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="参考教程-4">参考教程</h4>
+<ol>
+<li>(hexo butterfly 搜索系统教程)[<a target="_blank" rel="noopener" href="https://butterfly.js.org/posts/ceeb73f/#%E6%90%9C%E7%B4%A2%E7%B3%BB%E7%B5%B1">https://butterfly.js.org/posts/ceeb73f/#搜索系統</a>]</li>
+</ol>
+<h3 id="说说">说说</h3>
+<h4 id="问题-9">问题</h4>
+<p>如果你想在博客中添加一些说说，給hexo-theme-butterfly添加Artitalk说说功能</p>
+<h4 id="解决方法-4">解决方法</h4>
+<ol>
+<li>使用hexo-butterfly-artitalk插件，安装方法如下：</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-butterfly-artitalk</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>
+<p>LeanCloud 配置 參考 <a target="_blank" rel="noopener" href="https://artitalk.js.org/doc.html#%F0%9F%8C%88-leancloud-%E7%9A%84%E7%9B%B8%E5%85%B3%E5%87%86%E5%A4%87">Artitalk 文檔 - LeanCloud 的相關準備</a>，具体流程如下图（只需要设置完下图的操作即可）<br>
+<img src="https://cdn.jsdelivr.net/gh/rdyan0053/blogpicbed/img/20230224162409.png" alt="LeanCloud 应用设置"></p>
+</li>
+<li>
+<p>在 Hexo 根目录下的 _config.yml 文件中，新增以下的配置项：</p>
+</li>
+</ol>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Artitalk</span></span><br><span class="line"><span class="comment"># see https://artitalk.js.org/</span></span><br><span class="line"><span class="attr">artitalk:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">appId:</span> <span class="string">【必須】LeanCloud</span> <span class="string">創建的應用中的</span> <span class="string">AppID</span></span><br><span class="line">  <span class="attr">appKey:</span> <span class="string">【必須】LeanCloud</span> <span class="string">創建的應用中的</span> <span class="string">AppKEY</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">【可選】Artitalk</span> <span class="string">的路徑名稱（默認為</span> <span class="string">artitalk，生成的頁面為</span> <span class="string">artitalk/index.html）</span></span><br><span class="line">  <span class="attr">js:</span> <span class="string">【可選】更換</span> <span class="string">Artitalk</span> <span class="string">的</span> <span class="string">js</span> <span class="string">CDN（默認為</span> <span class="string">https://cdn.jsdelivr.net/npm/artitalk）</span></span><br><span class="line">  <span class="attr">option:</span> <span class="string">【可選】Artitalk</span> <span class="string">需要的額外配置</span></span><br><span class="line">  <span class="attr">front_matter:</span> <span class="string">【可選】Artitalk</span> <span class="string">頁面的</span> <span class="string">front_matter</span> <span class="string">配置</span></span><br></pre></td></tr></table></figure>
+<p>之后直接访问默认的路径<code>artitalk/index.html</code>即可看到效果<br>
+<img src="https://cdn.jsdelivr.net/gh/rdyan0053/blogpicbed/img/20230224161840.png" alt="效果展示"></p>
+<h4 id="参考教程-5">参考教程</h4>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://artitalk.js.org/doc.html#%F0%9F%8C%88-leancloud-%E7%9A%84%E7%9B%B8%E5%85%B3%E5%87%86%E5%A4%87">Artitalk说说开始使用</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/jerryc127/butterfly-plugins/tree/main/hexo-butterfly-artitalk">github教程参考</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://rdyan0053.github.io">rdyan</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://rdyan0053.github.io/2023/02/22/hexoblogs/shi-yong-hexo-da-jian-bo-ke-de-yi-xie-tips/">https://rdyan0053.github.io/2023/02/22/hexoblogs/shi-yong-hexo-da-jian-bo-ke-de-yi-xie-tips/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://rdyan0053.github.io" target="_blank">天天向上的东の博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%8D%9A%E5%AE%A2/">博客</a><a class="post-meta__tags" href="/tags/hexo/">hexo</a><a class="post-meta__tags" href="/tags/butterfly/">butterfly</a><a class="post-meta__tags" href="/tags/%E6%8F%92%E4%BB%B6/">插件</a><a class="post-meta__tags" href="/tags/github-pages/">github pages</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/rdyan0053/blogpicbed/img/20230227132649.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/rdyan0053/blogpicbed/img/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/rdyan0053/blogpicbed/img/wechat.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/02/22/postgraduate/yan-yi-xia-de-ke-cheng-xue-xi/" title="研一下的课程学习"><img class="cover" src="https://cdn.jsdelivr.net/gh/rdyan0053/blogpicbed/img/20230227133017.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">研一下的课程学习</div></div></a></div><div class="next-post pull-right"><a href="/2023/02/22/dailytools/za-xiang-sheng-chan-li-gong-ju/" title="杂项生产力工具"><img class="cover" src="https://cdn.jsdelivr.net/gh/rdyan0053/blogpicbed/img/20230222105543.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">杂项生产力工具</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/02/01/hexoblogs/di-yi-ge-bo-ke/" title="使用hexo搭建博客初体验"><img class="cover" src="https://fastly.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg2.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-02-01</div><div class="title">使用hexo搭建博客初体验</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/./images/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">rdyan</div><div class="author-info__description">这是一个混子研究生的博客，随便写写自己学习的笔记，还有一些乱七八糟的东西，欢迎来我的<a herf="https://github.com/rdyan0053/rdyan0053.github.io/issues">博客github地址</a>提issue</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">30</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">41</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/rdyan0053/rdyan0053.github.io/issues" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:rdyan0053@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客，如果对文章有疑问，欢迎在 <a herf='https://github.com/rdyan0053/rdyan0053.github.io/issues'>我的github地址</a> 提出issue，我会尽快回复。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%A8%A1%E6%9D%BF%E6%96%87%E4%BB%B6%E6%96%B0%E5%BB%BAmd%E6%96%87%E6%A1%A3%EF%BC%8C%E8%87%AA%E5%8A%A8%E4%BA%A7%E7%94%9FFront-matter"><span class="toc-number">1.</span> <span class="toc-text">使用模板文件新建md文档，自动产生Front-matter</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">1.1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95"><span class="toc-number">1.2.</span> <span class="toc-text">解决办法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B0%E5%BB%BAmd%E6%96%87%E6%A1%A3%E5%8F%AA%E8%83%BD%E4%BD%BF%E7%94%A8%E5%91%BD%E4%BB%A4%E8%A1%8C"><span class="toc-number">2.</span> <span class="toc-text">新建md文档只能使用命令行</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-2"><span class="toc-number">2.1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95-2"><span class="toc-number">2.2.</span> <span class="toc-text">解决办法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%95%99%E7%A8%8B"><span class="toc-number">2.3.</span> <span class="toc-text">参考教程</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E7%BB%84%E5%90%88%E5%91%BD%E4%BB%A4%EF%BC%8C%E4%B8%80%E6%AC%A1%E6%80%A7%E8%BF%90%E8%A1%8C%E5%A4%9A%E4%B8%AA%E5%91%BD%E4%BB%A4"><span class="toc-number">3.</span> <span class="toc-text">使用组合命令，一次性运行多个命令</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-3"><span class="toc-number">3.1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95-3"><span class="toc-number">3.2.</span> <span class="toc-text">解决办法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E7%BB%84%E5%90%88%E5%91%BD%E4%BB%A4%EF%BC%8C%E5%B9%B6%E4%B8%94%E9%85%8D%E7%BD%AE%E5%88%B0npm-script%E4%B8%AD"><span class="toc-number">3.2.1.</span> <span class="toc-text">使用组合命令，并且配置到npm script中</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A0%E6%B3%95%E6%8C%87%E5%90%91github%E4%B8%8A%E7%9A%84issue%E5%9C%B0%E5%9D%80"><span class="toc-number">4.</span> <span class="toc-text">无法指向github上的issue地址</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-4"><span class="toc-number">4.1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95-4"><span class="toc-number">4.2.</span> <span class="toc-text">解决办法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F%E7%9A%84%E5%BF%83%E5%BE%97"><span class="toc-number">5.</span> <span class="toc-text">使用数学公式的心得</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-5"><span class="toc-number">5.1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95-5"><span class="toc-number">5.2.</span> <span class="toc-text">解决办法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99%EF%BC%88%E5%BB%BA%E8%AE%AE%E5%85%88%E7%9C%8B%E7%AC%AC%E5%9B%9B%E4%B8%AA%EF%BC%89"><span class="toc-number">5.3.</span> <span class="toc-text">参考资料（建议先看第四个）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F%E5%87%BA%E7%8E%B0%E7%9A%84bug"><span class="toc-number">6.</span> <span class="toc-text">使用数学公式出现的bug</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-6"><span class="toc-number">6.1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="toc-number">6.2.</span> <span class="toc-text">解决方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%95%99%E7%A8%8B-2"><span class="toc-number">6.3.</span> <span class="toc-text">参考教程</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E6%96%87%E9%93%BE%E6%8E%A5%E8%BD%AC%E6%8B%BC%E9%9F%B3"><span class="toc-number">7.</span> <span class="toc-text">中文链接转拼音</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-7"><span class="toc-number">7.1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95-2"><span class="toc-number">7.2.</span> <span class="toc-text">解决方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%95%99%E7%A8%8B-3"><span class="toc-number">7.3.</span> <span class="toc-text">参考教程</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#local-search%EF%BC%88%E5%8F%AF%E9%80%89%E7%9A%84%EF%BC%89"><span class="toc-number">8.</span> <span class="toc-text">local search（可选的）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-8"><span class="toc-number">8.1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95-3"><span class="toc-number">8.2.</span> <span class="toc-text">解决方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%95%99%E7%A8%8B-4"><span class="toc-number">8.3.</span> <span class="toc-text">参考教程</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%B4%E8%AF%B4"><span class="toc-number">9.</span> <span class="toc-text">说说</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-9"><span class="toc-number">9.1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95-4"><span class="toc-number">9.2.</span> <span class="toc-text">解决方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%95%99%E7%A8%8B-5"><span class="toc-number">9.3.</span> <span class="toc-text">参考教程</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/02/27/postgraduate/kao-yan-de-yi-xie-zong-jie/" title="考研的一些总结"><img src="https://fastly.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg3.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="考研的一些总结"/></a><div class="content"><a class="title" href="/2023/02/27/postgraduate/kao-yan-de-yi-xie-zong-jie/" title="考研的一些总结">考研的一些总结</a><time datetime="2023-02-27T04:59:35.000Z" title="发表于 2023-02-27 12:59:35">2023-02-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/02/26/dailytools/zi-dong-hua-shou-cang-bo-ke/" title="自动化收藏博客"><img src="https://fastly.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="自动化收藏博客"/></a><div class="content"><a class="title" href="/2023/02/26/dailytools/zi-dong-hua-shou-cang-bo-ke/" title="自动化收藏博客">自动化收藏博客</a><time datetime="2023-02-26T06:59:42.000Z" title="发表于 2023-02-26 14:59:42">2023-02-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/02/26/dailytools/xin-xi-hua-guan-li-zhuan-zai-zi-shao-shu-pai/" title="信息化管理-转载自少数派"><img src="https://cdn.sspai.com/editor/u_f9lsirgn/16732688210361.png?imageView2/2/w/1120/q/40/interlace/1/ignore-error/1" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="信息化管理-转载自少数派"/></a><div class="content"><a class="title" href="/2023/02/26/dailytools/xin-xi-hua-guan-li-zhuan-zai-zi-shao-shu-pai/" title="信息化管理-转载自少数派">信息化管理-转载自少数派</a><time datetime="2023-02-26T06:57:32.000Z" title="发表于 2023-02-26 14:57:32">2023-02-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/02/25/dailytools/ai-gong-ju-zheng-he/" title="ai工具整合"><img src="https://fastly.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ai工具整合"/></a><div class="content"><a class="title" href="/2023/02/25/dailytools/ai-gong-ju-zheng-he/" title="ai工具整合">ai工具整合</a><time datetime="2023-02-25T06:16:28.000Z" title="发表于 2023-02-25 14:16:28">2023-02-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/02/24/yolo/yolov1-v3-li-lun-he-ji/" title="yolov1~v3理论合集"><img src="https://cdn.jsdelivr.net/gh/rdyan0053/blogpicbed/img/20230226191723.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="yolov1~v3理论合集"/></a><div class="content"><a class="title" href="/2023/02/24/yolo/yolov1-v3-li-lun-he-ji/" title="yolov1~v3理论合集">yolov1~v3理论合集</a><time datetime="2023-02-24T12:39:35.000Z" title="发表于 2023-02-24 20:39:35">2023-02-24</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By rdyan</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
